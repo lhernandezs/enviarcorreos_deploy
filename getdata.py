@@ -15,7 +15,6 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SAMPLE_SPREADSHEET_ID = '1yEIyw5cmIOA2-TsY1dqo4dZerVdjvm5qIalFf9cOi8w'
 SAMPLE_RANGE_NAME = 'formacion!A7:L1000'
 
-
 def main():
     #Shows basic usage of the Sheets API. Prints values from a sample spreadsheet.
     creds = None

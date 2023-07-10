@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block card %}
+<div>
+    
+  <h3>Welcome {{user.name}}</h3>
+  <p>your information is:</p>
+  {% if user.show_information %}
+  <ul>
+    <li>Awards: {{user.awards}} </li>
+    <li>Matches: {{user.matches}}</li>
+    <li>Date join: {{user.date_joined.strftime('%Y-%m-%d')}}</li>
+    <li>Pals: {{user.pals | length}}</li>
+  </ul>
+  {%else%}
+  <p>{{user.name}} has not information</p>
+  {% endif %}
+
+  <a href="https://www.sena.edu.co" title="Ir al SENA">Go to home</a>
+  </div>
+  {% endblock %}
