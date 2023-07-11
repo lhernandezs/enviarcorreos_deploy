@@ -1,22 +1,30 @@
 import os.path
+import json
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+from google.auth.transport.requests     import Request
+from google.oauth2.credentials          import Credentials
+from google_auth_oauthlib.flow          import InstalledAppFlow
+from googleapiclient.discovery          import build
+from googleapiclient.errors             import HttpError
 
-class fichas:
+class Datos:
 
-    def __init__(self, scopes, hoja, rango, credenciales, token, path):
-        self._scopes = scopes
-        self._hoja = hoja
-        self._rango = rango
-        self._credenciales = credenciales
-        self._token = token
-        self._path = path
+    # constructor de la clase
+    def __init__(self, archivoJson):
 
-    def obtenerCredenciales(self):
+        # leo el archivo JSON con los datos de conexion
+        with open(archivoJson, 'r') as conex:
+            arc = json.load(conex)
+
+        self._scopes        = arc["scopes"] 
+        self._hoja          = arc["hoja"] 
+        self._rango         = arc["rango"] 
+        self._credenciales  = arc["credenciales"] 
+        self._token         = arc["token"] 
+        self._path          = arc["path"]
+
+    # consigo el token y/o credenciales de conexion
+    def getCredenciales(self):
 
         # El archivo token.json almacena los tokens de acceso y actualización del usuario, y se crea automáticamente cuando el flujo de autorización se completa por primera vez.
         token = os.path.join(self._path, self._token)
@@ -34,20 +42,22 @@ class fichas:
                 flow = InstalledAppFlow.from_client_secrets_file(credenciales, self._scopes)
                 creds = flow.run_local_server(port=0)
             
-            # Guarde las credenciales para la próxima ejecución
+            # Guarda las credenciales para la próxima ejecución
             with open(token, 'w') as token:
                 token.write(creds.to_json())
         
         return creds
 
-    def obtenerDatos(self, creds):
+    # obtengo los datos de las fichas o None si no es posible la conexión
+    def getDatos(self, creds):
         try:
             service = build('sheets', 'v4', credentials=creds)
 
-            # Llamar a la Sheets API y cargar los datos
+            # Llama a la Sheets API y cargar los datos
             sheet = service.spreadsheets()
             result = sheet.values().get(spreadsheetId=self._hoja, range=self._rango).execute()
             return result.get('values', [])
 
         except HttpError as err:
             print(err)
+            return None
