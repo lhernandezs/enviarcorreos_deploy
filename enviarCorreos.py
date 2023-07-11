@@ -36,8 +36,6 @@ class Correo:
         self._serRec = serRec
         self._namRec = namRec
         self._modelo = modelo
-        print(self._emaEnv)
-        print(self._serEnv)
 
     def render_html(self, modelo: Modelo):
         template_result = Correo.ENV.get_template(self._templa)
