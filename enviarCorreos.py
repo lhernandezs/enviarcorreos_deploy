@@ -1,5 +1,6 @@
 import smtplib
 import os.path
+import json
 
 from datetime import date
 from email.message import EmailMessage
@@ -10,6 +11,7 @@ from pydantic import BaseModel
 from jinja2 import (Environment, select_autoescape, FileSystemLoader,)
 
 class Modelo(BaseModel):
+
     name: str
     awards: int
     matches: int
@@ -21,18 +23,21 @@ class Correo:
 
     ENV = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
 
-    def __init__(self, emaEnv, emaRec, serEnv, serRec, namEnv, namRec, asunto, templa, modelo, adjunt,):
-        self._emaEnv = emaEnv
+    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo):
+        with open(os.path.join('json', archivoJson), 'r') as conex:
+            arc = json.load(conex)
+        self._emaEnv = arc["emailRemitente"] 
+        self._serEnv = arc["servidorRemitente"] 
+        self._namEnv = arc["nombreRemitente"] 
+        self._asunto = arc["asunto"] 
+        self._templa = arc["template"]
+        self._adjunt = arc["adjunto"]
         self._emaRec = emaRec
-        self._serEnv = serEnv
         self._serRec = serRec
-        self._namEnv = namEnv
         self._namRec = namRec
-        self._asunto = asunto
-        self._templa = templa
         self._modelo = modelo
-        self._adjunt = adjunt
-
+        print(self._emaEnv)
+        print(self._serEnv)
 
     def render_html(self, modelo: Modelo):
         template_result = Correo.ENV.get_template(self._templa)
@@ -69,5 +74,5 @@ class Correo:
         smtp.quit()
 
 user = Modelo(name="Juliana", awards=3, matches=5, pals=["Darwin", "Dana"], show_information=True)
-correo = Correo("lhernandezs331","leo66", "gmail.com", "hotmail.com","LeoGmail", "LeoHotmail", "pruebaCorreo", "welcome.html", user, os.path.join("attachments","cierre de Curso CSF - Act 2023 03 20.xlsx"))
+correo = Correo('sercorreo.json','leo66', 'hotmail.com', 'LeoHotmail', user )
 correo.build_email(user=user)
