@@ -1,6 +1,5 @@
 import calendar
 from datetime import date
-from dateutil.relativedelta import relativedelta
 
 class Anno:
     FESTIVOS = { 2023:
@@ -44,10 +43,11 @@ class Anno:
             for (dia, ind) in tuplas:
                 listaDiasNum.append([mes, dia, ind])
 
-        listaDepurada = list(filter(lambda x: x[2] not in [5,6] and x[1]!= 0, listaDiasNum)) # se elminan los sabados y domingos y se crea la lista de dias. tambien elimina los ceros de relleno en listaDiasMes
+        listaDepurada = list(filter(lambda x: x[2] not in [5,6] and x[1]!= 0, listaDiasNum)) # se elminan los sabados y domingos. tambien elimina los ceros de relleno en listaDiasMes
         listaFechas = list(map(lambda d: date(self._anno, d[0], d[1]), listaDepurada))
         return list(filter(lambda f: f not in self.listaFestivos(), listaFechas))
 
+    # retorna la lista de dias Festivos del año correspondiente
     def listaFestivos(self):
         festivos = []
         for mes in Anno.FESTIVOS[self._anno]:
