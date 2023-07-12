@@ -1,5 +1,5 @@
 import calendar
-import datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 class Anno:
@@ -35,25 +35,28 @@ class Anno:
     def __init__(self, anno):
         self._anno = anno
 
-    # devuelve la lista de los dias laborables del mes
+    # devuelve la lista de los dias laborables del año
     def listaDiasLaborables(self):
-        lista = []
+        listaDiasNum = []
         calendario = calendar.Calendar()
         for mes in range(1,13):
-            tuplas = calendario.itermonthdays2(2023, mes)
+            tuplas = calendario.itermonthdays2(self._anno, mes)
             for (dia, ind) in tuplas:
-                lista.append([mes, dia, ind])
+                listaDiasNum.append([mes, dia, ind])
 
-        for item in lista:
-            print(item)
-        # listaDiasMes = [x for x in calendario.itermonthdays2(2023, self._mes)] # se crean las tuplas (dia mes, dia semana)
-        # listaTuplasMes = list(filter(lambda x: x[1] not in [5,6] and x[0]!= 0, listaDiasMes)) # se elminan los sabados y domingos y se crea la lista de dias. tambien elimina los ceros de relleno en listaDiasMes
-        # return list(filter(lambda x: x not in Mes.FESTIVOS[self._mes], [x[0] for x in listaTuplasMes])) # retorna la lista de dias laborables del mes eliminando los festivos
+        listaDepurada = list(filter(lambda x: x[2] not in [5,6] and x[1]!= 0, listaDiasNum)) # se elminan los sabados y domingos y se crea la lista de dias. tambien elimina los ceros de relleno en listaDiasMes
+        listaFechas = list(map(lambda d: date(self._anno, d[0], d[1]), listaDepurada))
+        return list(filter(lambda f: f not in self.listaFestivos(), listaFechas))
 
-    # devuelve la fecha del ultimo dia del mes
-    def ultimoDia(self):
-        return datetime.date(2023, self._mes, 1) + relativedelta(day=31)
+    def listaFestivos(self):
+        festivos = []
+        for mes in Anno.FESTIVOS[self._anno]:
+            for dia in Anno.FESTIVOS[self._anno][mes]:
+                festivos.append(date(self._anno, mes, dia))
+        return festivos
+
     
 if __name__ == "__main__":
     y = Anno(2023)
-    y.listaDiasLaborables()
+    for dia in y.listaDiasLaborables():
+        print(dia)
