@@ -50,6 +50,7 @@ class Datos:
 
     # obtengo los datos de las fichas o None si no es posible la conexión
     def getDatos(self, creds):
+        
         try:
             service = build('sheets', 'v4', credentials=creds)
 

@@ -2,17 +2,20 @@
 {% block card %}
 <div>
     
-  <h3>Welcome {{user.name}}</h3>
+  <h3>Welcome {{user.instructor}}</h3>
   <p>your information is:</p>
   {% if user.show_information %}
   <ul>
-    <li>Awards: {{user.awards}} </li>
-    <li>Matches: {{user.matches}}</li>
-    <li>Date join: {{user.date_joined.strftime('%Y-%m-%d')}}</li>
-    <li>Pals: {{user.pals | length}}</li>
+    <li>Email: {{user.email}} </li>
+    <li>Fichas: {{user.fichas | length}}</li>
+    {% for ficha in user.fichas %}
+      <ul>
+        <li>{{ ficha[0] }}  y {{ ficha[1] }}</li>
+      </ul>
+    {% endfor %}
   </ul>
   {%else%}
-  <p>{{user.name}} has not information</p>
+  <p>{{user.instructor}} has not information</p>
   {% endif %}
 
   <a href="https://www.sena.edu.co" title="Ir al SENA">Go to home</a>

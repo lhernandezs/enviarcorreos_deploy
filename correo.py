@@ -2,22 +2,11 @@ import smtplib
 import os.path
 import json
 
-from datetime import date
-from email.message import EmailMessage
-from email.headerregistry import Address
-from typing import List
-from io import BytesIO
-from pydantic import BaseModel
-from jinja2 import (Environment, select_autoescape, FileSystemLoader,)
-
-class Modelo(BaseModel):
-
-    name: str
-    awards: int
-    matches: int
-    date_joined: date = date.today()
-    pals: List[str]
-    show_information: bool = False
+from email.message          import EmailMessage
+from email.headerregistry   import Address
+from io                     import BytesIO
+from modelo                 import Modelo
+from jinja2                 import (Environment, select_autoescape, FileSystemLoader,)
 
 class Correo:
 
@@ -48,6 +37,16 @@ class Correo:
             file_image = file.read()
         return file_image
 
+    def send_email(self, email_message: EmailMessage):
+
+        remitente = self._emaEnv + "@" + self._serEnv
+        destinatario = self._emaRec + "@" + self._serRec
+
+        smtp = smtplib.SMTP_SSL("smtp.gmail.com")
+        smtp.login(remitente, "ghpflywujadbastq")
+        smtp.sendmail(remitente, destinatario, email_message.as_string())
+        smtp.quit()
+
     def build_email(self, user: Modelo):
 
         html_data: str = self.render_html(user)
@@ -60,17 +59,3 @@ class Correo:
         email_message.add_attachment(self.open_file(), maintype="application", subtype="xls", filename=self._adjunt)
         
         self.send_email(email_message=email_message)
-
-    def send_email(self, email_message: EmailMessage):
-
-        remitente = self._emaEnv + "@" + self._serEnv
-        destinatario = self._emaRec + "@" + self._serRec
-
-        smtp = smtplib.SMTP_SSL("smtp.gmail.com")
-        smtp.login(remitente, "ghpflywujadbastq")
-        smtp.sendmail(remitente, destinatario, email_message.as_string())
-        smtp.quit()
-
-user = Modelo(name="Juliana", awards=3, matches=5, pals=["Darwin", "Dana"], show_information=True)
-correo = Correo('sercorreo.json','leo66', 'hotmail.com', 'LeoHotmail', user )
-correo.build_email(user=user)
