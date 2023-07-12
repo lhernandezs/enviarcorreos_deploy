@@ -3,6 +3,6 @@
     "servidorRemitente" : "gmail.com",
     "nombreRemitente" : "lhernandezs@sena.edu.co",
     "asunto" : "prueba correo",
-    "template" : "welcome.html",
+    "template" : "correoAlistamiento.html",
     "adjunto" : "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
 }

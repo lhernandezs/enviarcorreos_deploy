@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block texto %}
+
+<p>
+    Instructor<br>
+    <b>{{ user.instructor }}</b><br>
+    {{ user.email }}
+</p>
+<p>Asunto:<b>Alistamiento programas formación complementaria virtual</b></p>
+<p>Cordial saludo, esperamos se encuentre muy bien,</p>
+<p>De manera atenta agradecemos la gestión del alistamiento de las siguientes fichas:</p>
+</div>
+<div align=center>
+<table border="1" bordercolor="666633" cellpadding="1" cellspacing="0">
+    <tr>
+        <th width= 76><p><b>Ficha</b></p></th>
+        <th width=308><p><b>Programa</b></p></th>
+        <th width=261><p><b>Familia</b></p></th> 
+        <th width= 106><p><b>Fecha Inicio</b></p></th>
+        <th width= 106><p><b>Fecha Fin</b></p></th>
+    </tr>
+
+    {% for ficha in user.fichas %}
+   
+      <tr>
+          <td width=  76><p align=center>{{ ficha[0] }}</p></td>
+          <td width= 308><p align=center>{{ ficha[0] }}</p></td>
+          <td width= 261><p align=center>{{ ficha[0] }}</p></td> 
+          <td width= 106><p align=center>{{ ficha[1] }}</p></td>
+          <td width= 106><p align=center>{{ ficha[1] }}</p></td>
+      </tr>
+
+    {% endfor %}
+
+</table>
+</div>
+<div>
+<p>Asimismo, recordar los ítems propios de la guía con su correspondiente lista de chequeo para la fase de Alistamiento.</p>
+<table border="1" bordercolor="666633" cellpadding="1" cellspacing="0" width=566>
+    <tr>
+        <th colspan=2><h3>ALISTAMIENTO AMBIENTE DE FORMACIÓN</h3></th>
+    </tr>
+    <tr>
+        <td align=center width=75><b>1</b></p></td>
+
+        <td width=492>
+            <p><font size="1pt">Se encuentra disponible para aprendices en el enlace<b><i>&nbsp;“Contenido del Curso”</i></b>&nbsp;(según<b>&nbsp;Modelo de contenido</b>)&nbsp;el cronograma general del programa con la siguiente información, conforme a lo establecido en la guía de orientaciones actual:<br>
+                • Fechas de inicio y finalización de cada unidad temática.<br>
+                • Fecha y hora de las conferencias web por unidad temática.<br>
+                • Actividades de aprendizaje a realizar durante el desarrollo del programa.<br>
+                • Resultados de Aprendizaje (RAP) asociados a la unidad temática correspondiente.
+            </font></p>
+        </td>
+        
+    </tr>
+    <tr>
+        <td align=center width=75><b>2</b></p></td>
+          <td width=492>
+              <p><font size="1pt">Perfil del instructor. Se encuentra publicado y disponible para consulta de los aprendices la siguiente información:<br>
+                • Formación profesional (información académica) y experiencia laboral conforme a lo establecido en la guía de orientaciones actual.<br>
+                • Correo electrónico profesional.<br>
+                • Foto del instructor conforme a lo establecido en la guía de orientaciones actual.<br>
+                • Regional y Centro de Formación conforme a lo establecido en la guía de orientaciones actual.<br>
+                • Horario de atención sincrónica, mínimo una (1) hora a la semana, el/los días(s) de atención, ruta exacta y/o enlace para el ingreso.
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>3</b></p></td>
+          <td width=492>
+              <p><font size="1pt">Verifica y garantiza que todos los evidencias, pruebas/foros, se encuentren disponibles para el trabajo del aprendiz y habilitados en su totalidad desde el inicio y hasta el final de la formación, en concordancia con las fechas establecidas en el Sistema de Gestión Académica,&nbsp;conforme a lo establecido en la guía de orientaciones actual.
+            </font></p>
+        </td>
+    </tr>                <tr>
+        <td align=center width=75><b>4</b></p></td>
+        <td width=492>
+              <p><font size="1pt">Configura con una fecha límite de entrega, cada una de las evidencias, en concordancia con las fechas establecidas en el cronograma del programa.
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>5</b></p></td>
+        <td width=492>
+            <p><font size="1pt">En el&nbsp;<b><i>&quot;Centro de Calificaciones&quot;</i></b>, asocia todas las actividades y/o evidencias teniendo en cuenta lo estipulado en las guías de aprendizaje-cronograma.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>6</b></p></td>
+        <td width=492>
+            <p><font size="1pt">Configura para que el aprendiz encuentre disponible, desde el inicio de la formación, como mínimo, los siguientes foros:<br>
+                •&nbsp;<b><i>“Foro de Dudas e Inquietudes”</i></b><br>
+                •&nbsp;<b><i>“Foro Social”</i></b><br>
+                • Temático(s)
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>7</b></p></td>
+        <td width=492>
+            <p><font size="1pt">Configura el Foro de Dudas e Inquietudes con fecha de inicio y finalización, de acuerdo con las fechas   establecidas en el Sistema de Gestión Académica.
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>8</b></p></td>
+          <td width=492>
+              <p><font size="1pt">Configura el Foro Social y Temático(s) propuesto(s) en el cronograma, con fecha de inicio y finalización, conforme a lo establecido en la guía de orientaciones actual.
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>9</b></p></td>
+        <td width=492>
+              <p><font size="1pt">Máximo un (1) día calendario después de la fecha de inicio de la formación (fecha establecida en el Sistema de Gestión Académica), registra la apertura del Foro Social, Dudas e Inquietudes y Temático(s) conforme a lo establecido en la guía de orientaciones actual, realizando la primera participación en el espacio&nbsp;<b><i>“Mensaje”
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>10</b></p></td>
+        <td width=492>
+            <p><font size="1pt">Máximo un (1) día calendario después de la fecha de inicio de la formación (fecha establecida en el Sistema de Gestión Académica), publica en un anuncio la bienvenida al programa, con la siguiente información:<br>
+            • Nombre exacto del programa de formación.<br>
+            • Número de ficha del programa.<br>
+            • Fecha de inicio y fin de la formación (fechas establecidas en el Sistema de Gestión Académica).<br>
+            • Fecha fin de recepción de evidencias conforme a lo establecido en la guía de orientaciones actual (esta información se publicará si la fecha fin de recepción de evidencias difiere a la fecha fin de la formación).<br>
+            • Nombre del instructor.&nbsp;<br>
+            • Espacios internos de comunicación con el instructor.
+        </font></p>
+    </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>11</b></p></td>
+        <td width=492>
+            <p><font size="1pt">Máximo un (1) día calendario después de la fecha de inicio de la formación (fecha establecida en el Sistema de Gestión Académica), publica en un anuncio la apertura al programa, con la siguiente información:<br>
+                • Ruta exacta de ubicación del cronograma de actividades.<br>
+                • Instrucciones al aprendiz sobre qué consultar de manera inicial.<br>
+                • Invitación al aprendiz a participar en el Foro Social.
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>12</b></p></td>
+        <td width=492>
+            <p><font size="1pt">Organiza en el enlace&nbsp;<b><i>“Contenido del Curso”</i></b>&nbsp;la Carpeta&nbsp;<b><i>“Sesiones en Línea” /“Online <span>Sessions</span>”</i></b>, carpeta&nbsp;<b><i>“Grabaciones Sesiones en Línea” /&quot;Web <span>Conference</span><span>Recordings</span>&quot;</i></b>.&nbsp;<o:p></o:p></span>
+            </font></p>
+        </td>
+    </tr>
+    <tr>
+        <td align=center width=75><b>13</b></p></td>
+        <td width=492>
+            <p><font size="1pt">En la carpeta&nbsp;<b><i>“Sesiones en Línea”/“Online <span class=SpellE>Sessions</span>”</i></b>, carpeta&nbsp;<b><i>“Grabaciones Sesiones en línea” /&quot;Web <span class=SpellE>Conference</span><span>Recordings</span>”</i></b>: Publica la grabación de la conferencia web de bienvenida con su respectivo resumen,&nbsp;conforme a lo establecido en la guía de orientaciones actual.<o:p></o:p></span>
+            </font></p>
+        </td>
+    </tr>
+</table>
+<p>Reiteramos nuestro apoyo desde la Coordinación, por cualquier situación extraordinaria que se pueda presentar.</p>
+<p>Atentamente,</p>
+{% endblock %}
