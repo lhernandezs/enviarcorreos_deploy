@@ -55,6 +55,7 @@ class Correo:
         email_message["Subject"]    = self._asunto
         email_message["From"]       = Address(username=self._emaEnv, domain=self._serEnv, display_name=self._namEnv)
         email_message["To"]         = Address(username=self._emaRec, domain=self._serRec, display_name=self._namRec)
+        
         email_message.add_alternative(html_data, subtype="html")
         email_message.add_attachment(self.open_file(), maintype="application", subtype="xls", filename=self._adjunt)
         
