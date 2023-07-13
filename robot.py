@@ -22,28 +22,37 @@ class Robot:
         self._datos = datos
 
     def processDatos(self):
-        # fechaActual = date.today()
-        # diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
-        # if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
-        #     indiceFechaActual = diasLaborables.index(fechaActual)
+        fechaActual = date.today()
+        diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
-        #     # para prueba --  se debe quitar
-        #     fichasAlistamiento = list(filter(lambda fila: self.filtroFichasAlistamiento(fila, date(2023, 6, 21), date(2023, 6, 22), True), self._datos))
-            
-        #     # Se deja para produccion
-        #     # fichasAlistamiento = list(filter(lambda fila: filtroFichasAlistamiento(fila, fechaActual, diasLaborables[indiceFechaActual + 1], True), self._datos))
+        if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
 
-        #     for row in fichasAlistamiento:
-        #         if len(row) == 12:
-        #             # Print columns, which correspond to indices 0 and 4.
-        #             print('%s, %s, %s, %s, %s, %s, %s' % (row[0], row[1], row[2], row[4], row[8], row[10], row[11]))
+        #   # Se deja para produccion
+            # indiceFechaActual = diasLaborables.index(fechaActual)
+            # fichasAlistamiento = list(filter(lambda fila: filtroFichasAlistamiento(fila, fechaActual, diasLaborables[indiceFechaActual + 1], True), self._datos))
 
-        #    user = Modelo(name="Juliana", awards=3, matches=5, pals=["Darwin", "Dana"], show_information=True)
+            # para prueba --  se debe quitar
+            filaAlistamiento = list(filter(lambda fila: self.filtroFichasAlistamiento(fila, date(2023, 6, 21), date(2023, 6, 22), True), self._datos))
+            filaAlistamiento.append( ["","","","","","","","","","","",""] ) # para procesar el ultimo bloque
 
-            user = Modelo(instructor="Juliana", email="juli@hotmail.com", fichas=[("hola 1", 1),("que mas 2", 3)], show_information=True)
-
-            correo = Correo('sercorreo.json','leo66', 'hotmail.com', 'LeoHotmail', user )
-            correo.build_email(user=user)
+            instructorAnterior = ""
+            fichas = []
+            for fila in filaAlistamiento:
+                instructor  = fila[4]
+                if not instructor == instructorAnterior:
+                    if instructorAnterior != "":
+                        user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas)
+                        correo = Correo('sercorreo.json','leo66', 'hotmail.com', 'LeoHotmail', user )
+                        correo.build_email(user=user)
+                    instructorAnterior = instructor
+                    fichas = []
+                ficha       = fila[0]
+                curso       = fila[1]
+                familia     = fila[2]
+                email       = fila[8]
+                fecIni      = fila[10]
+                fecFin      = fila[11]
+                fichas.append([ficha, curso, familia, fecIni, fecFin])
 
     #  
     def filtroFichasAlistamiento(self, fila, fechaActual, fechaInicio, alistamiento):
@@ -63,5 +72,5 @@ class Robot:
     
 if __name__ == '__main__':
     robot = Robot()
-#    robot.getDatos()
+    datos = robot.getDatos()
     robot.processDatos()

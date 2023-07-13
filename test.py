@@ -2,9 +2,13 @@
 # print('22/06/2023'[3:5])
 # print('22/06/2023'[0:2])
 
-import os
-import json
+# import os
+# import json
 
-path = "json"
+# path = "json"
 
+lista = [n for n in range(1,5)]
+
+while i:= lista.pop(0):
+    print(i)
 

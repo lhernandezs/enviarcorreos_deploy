@@ -57,6 +57,8 @@ class Correo:
         email_message["To"]         = Address(username=self._emaRec, domain=self._serRec, display_name=self._namRec)
         
         email_message.add_alternative(html_data, subtype="html")
-        email_message.add_attachment(self.open_file(), maintype="application", subtype="xls", filename=self._adjunt)
+        
+        if user.argregarArchivo:
+            email_message.add_attachment(self.open_file(), maintype="application", subtype="xls", filename=self._adjunt)
         
         self.send_email(email_message=email_message)
