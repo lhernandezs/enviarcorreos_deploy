@@ -4,11 +4,13 @@
 
 # import os
 # import json
-
 # path = "json"
 
-lista = [n for n in range(1,5)]
+# lista = [n for n in range(1,5)]
+# while i:= lista.pop(0):
+#     print(i)
 
-while i:= lista.pop(0):
-    print(i)
-
+cadena = "leo66@hotmail.com"
+(dir, ser) = cadena.split(sep="@")
+print(dir)
+print(ser)

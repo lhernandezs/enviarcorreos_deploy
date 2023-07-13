@@ -41,8 +41,15 @@ class Robot:
                 instructor  = fila[4]
                 if not instructor == instructorAnterior:
                     if instructorAnterior != "":
+                        (emailIns, seremailIns) = email.split(sep = "@")
                         user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas)
-                        correo = Correo('sercorreo.json','leo66', 'hotmail.com', 'LeoHotmail', user )
+                        
+                        # para prueba -- se debe quitar
+                        correo = Correo('sercorreoalistamiento.json','leo66', 'hotmail.com', 'LeoHotmail', user )
+                        
+                        #   # Se deja para produccion
+                        # correo = Correo('sercorreoalistamiento.json',emailIns, seremailIns, instructor, user )
+                       
                         correo.build_email(user=user)
                     instructorAnterior = instructor
                     fichas = []
