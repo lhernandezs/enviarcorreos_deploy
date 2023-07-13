@@ -1,3 +1,6 @@
+import time
+import random
+ 
 from datos          import Datos
 from datetime       import date
 from anno           import Anno
@@ -21,63 +24,64 @@ class Robot:
     
         self._datos = datos
 
+    # filtra las filas si tienen los datos de fechaInicio/Terminacion segun la fecha de inicio / terminacion 
+    def filtroFichas(self, fila, fechaActual, fechaLabSig, alistamiento):
+        if len(fila) == 12:
+            indice = 10 if alistamiento else 11
+            (anno, mes, dia) = (int(fila[indice][6:10]), int(fila[indice][3:5]), int(fila[indice][0:2]))
+            if fechaActual < date(anno, mes, dia) and date(anno, mes, dia) <= fechaLabSig: return True
+        return False
+
+    # envia los correos segun las filas 
+    def sendCorreos(self, filas, produccion, argregarArchivo):
+        instructorAnterior = ""
+        fichas = []
+        for fila in filas:
+            instructor  = fila[4]
+            if not instructor == instructorAnterior:
+                if instructorAnterior != "":
+                    time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
+                    (emailIns, seremailIns) = email.split(sep = "@")
+                    user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas, argregarArchivo = argregarArchivo)
+                    archivoJson = 'sercorreoterminacion.json' if argregarArchivo else 'sercorreoalistamiento.json'
+                    if not produccion: # para prueba 
+                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user )
+                    else:
+                        pass
+                    #    correo = Correo(archivoJson, emailIns, seremailIns, instructor, user )
+
+                    correo.build_email(user=user)
+
+                instructorAnterior = instructor
+                fichas = []
+
+            (ficha, curso, familia, email, fecIni, fecFin) = (fila[0], fila[1], fila[2], fila[8], fila[10], fila[11],)
+            fichas.append([ficha, curso, familia, fecIni, fecFin])
+            
+    # revisa si el dia de envio de correos es laborable, filtra las fichas y llama a sendCorreos()
     def processDatos(self):
         fechaActual = date.today()
         diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
         if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
 
-        #   # Se deja para produccion
-            # indiceFechaActual = diasLaborables.index(fechaActual)
-            # fichasAlistamiento = list(filter(lambda fila: filtroFichasAlistamiento(fila, fechaActual, diasLaborables[indiceFechaActual + 1], True), self._datos))
+            ####-----------------------------------------------------
+            produccion = False  # para pruebas --> produccion = False
+            ####-----------------------------------------------------
 
-            # para prueba --  se debe quitar
-            filaAlistamiento = list(filter(lambda fila: self.filtroFichasAlistamiento(fila, date(2023, 6, 21), date(2023, 6, 22), True), self._datos))
-            filaAlistamiento.append( ["","","","","","","","","","","",""] ) # para procesar el ultimo bloque
+            if not produccion: fechaActual = date(2023, 6, 21) # para pruebas
 
-            instructorAnterior = ""
-            fichas = []
-            for fila in filaAlistamiento:
-                instructor  = fila[4]
-                if not instructor == instructorAnterior:
-                    if instructorAnterior != "":
-                        (emailIns, seremailIns) = email.split(sep = "@")
-                        user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas)
-                        
-                        # para prueba -- se debe quitar
-                        correo = Correo('sercorreoalistamiento.json','leo66', 'hotmail.com', 'LeoHotmail', user )
-                        
-                        #   # Se deja para produccion
-                        # correo = Correo('sercorreoalistamiento.json',emailIns, seremailIns, instructor, user )
-                       
-                        correo.build_email(user=user)
-                    instructorAnterior = instructor
-                    fichas = []
-                ficha       = fila[0]
-                curso       = fila[1]
-                familia     = fila[2]
-                email       = fila[8]
-                fecIni      = fila[10]
-                fecFin      = fila[11]
-                fichas.append([ficha, curso, familia, fecIni, fecFin])
+            fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
+            # append(["" for i in range(12)]) para procesar el ultimo instructor
+            filasAlistamiento = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, True), self._datos)))
+            filasAlistamiento.append(["" for i in range(12)]) 
+            filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
+            filasTerminacion.append(["" for i in range(12)]) 
 
-    #  
-    def filtroFichasAlistamiento(self, fila, fechaActual, fechaInicio, alistamiento):
-        if len(fila) == 12:
-            if alistamiento:
-                dia = int(fila[10][0:2])
-                mes = int(fila[10][3:5])
-                anno = int(fila[10][6:10])
-            else:
-                dia = int(fila[11][0:2])
-                mes = int(fila[11][3:5])
-                anno = int(fila[11][6:10])
-
-            if fechaActual < date(anno, mes, dia) and date(anno, mes, dia) <= fechaInicio:
-                return True
-        return False
-    
+            if filasAlistamiento: self.sendCorreos(filasAlistamiento, produccion, False)
+            if filasTerminacion: self.sendCorreos(filasTerminacion, produccion, True)
+   
 if __name__ == '__main__':
     robot = Robot()
-    datos = robot.getDatos()
+    robot.getDatos()
     robot.processDatos()

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block texto %}
+
+<p>
+    Instructor<br>
+    <b>{{ user.instructor }}</b><br>
+    {{ user.email }}
+</p>
+<p>Asunto:<b>Cierre programas formación complementaria virtual</b></p>
+<p>Cordial saludo, esperamos se encuentre muy bien,</p>
+<p>De manera atenta agradecemos la gestión del cierre de las siguientes fichas:</p>
+</div>
+<div align=center>
+    <table border="1" bordercolor="666633" cellpadding="1" cellspacing="0">
+        <tr>
+            <th width=76>
+                <p><b>Ficha</b></p>
+            </th>
+            <th width=308>
+                <p><b>Programa</b></p>
+            </th>
+            <th width=261>
+                <p><b>Familia</b></p>
+            </th>
+            <th width=106>
+                <p><b>Fecha Inicio</b></p>
+            </th>
+            <th width=106>
+                <p><b>Fecha Fin</b></p>
+            </th>
+        </tr>
+
+        {% for ficha in user.fichas %}
+
+        <tr>
+            <td width=76>
+                <p align=center>{{ ficha[0] }}</p>
+            </td>
+            <td width=308>
+                <p align=center>{{ ficha[1] }}</p>
+            </td>
+            <td width=261>
+                <p align=center>{{ ficha[2] }}</p>
+            </td>
+            <td width=106>
+                <p align=center>{{ ficha[3] }}</p>
+            </td>
+            <td width=106>
+                <p align=center>{{ ficha[4] }}</p>
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+</div>
+<div>
+    <p>Por favor tener en cuenta la lista de chequeo para la ejecución formación complementaria con modalidad virtual.</p>
+    <table border="1" bordercolor="666633" cellpadding="1" cellspacing="0" width=566>
+        <tr>
+            <th colspan=2>
+                <h3>CIERRE PROCESO FORMATIVO</h3>
+            </th>
+        </tr>
+        <tr>
+            <td align=center width=75><b>26</b></p>
+            </td>
+
+            <td width=492>
+                <p>
+                    <font size="1pt">Concluye cada uno de los Foros Temáticos en las fechas establecidas en el cronograma, conforme a lo establecido en la guía de orientaciones actual.
+                    </font>
+                </p>
+            </td>
+
+        </tr>
+        <tr>
+            <td align=center width=75><b>27</b></p>
+            </td>
+            <td width=492>
+                <p>
+                    <font size="1pt">Anuncio de cierre: conforme a lo establecido en la guía de orientaciones actual, publica 2 días hábiles antes del cierre de la formación (fecha establecida en el Sistema de Gestión Académica), un (1) anuncio indicando a los aprendices: <br>
+                        • Tiempo estimado de descarga del certificado de aprobación del curso.<br>
+                        • Ubicación del manual (enlace o ruta) para descarga del certificado.<br>
+                        • Mensaje de invitación a realizar otros programas de formación estipulado en la guía de orientaciones actual.<br>
+                       </font>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td align=center width=75><b>28</b></p>
+            </td>
+            <td width=492>
+                <p>
+                    <font size="1pt">Publica en un (1) anuncio, el día de cierre de la formación (fecha establecida en el Sistema de Gestión Académica) la lista de aprendices que aprueban el curso. 
+                    </font>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td align=center width=75><b>29</b></p>
+            </td>
+            <td width=492>
+                <p>
+                    <font size="1pt">	
+                        Se encuentra como no disponible en el enlace “Edición de contenidos” la carpeta “Reporte de Curso”, con la siguiente información: <br>
+                        • Copia del libro de calificación con la totalidad de evidencias calificadas.<br>
+                        • Formato de cierre dispuesto por el Centro de Formación debidamente diligenciado con la descarga de los juicios de evaluación.<br>
+                    </font>
+                </p>
+            </td>
+        </tr>
+
+    </table>
+    <br>
+    <p>Se recuerda que en la plataforma se deberá subir el archivo adjunto y por aparte el centro de calificaciones.</p>
+    <p>Reiteramos nuestro apoyo desde la Coordinación frente a cualquier situación extraordinaria que se pueda presentar.</p>
+    <p>Por favor enviar el formato diligenciado en un plazo máximo de 3 días después de realizado el cierre de las fichas.</p>
+</div>
+
+{% endblock %}

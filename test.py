@@ -10,7 +10,10 @@
 # while i:= lista.pop(0):
 #     print(i)
 
-cadena = "leo66@hotmail.com"
-(dir, ser) = cadena.split(sep="@")
-print(dir)
-print(ser)
+# cadena = "leo66@hotmail.com"
+# (dir, ser) = cadena.split(sep="@")
+# print(dir)
+# print(ser)
+
+lista = ["" for i in range(12)]
+print(lista)
