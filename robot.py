@@ -7,30 +7,22 @@ from datetime       import date, datetime
 from anno           import Anno
 from correo         import Correo
 from modelo         import Modelo
-
+from log            import Log
 class Robot:
 
     def __init__(self):
         self._datosConexion = Datos("json\conexion.json") # crea una instancia de datos según el archivo de configuracion JSON de la conexion
         self._datos = None
 
-    def escribirlog(self, mensaje):
-        diaYHora = datetime.now()
-        file = os.path.join("log", "errores.log")
-        with open(file, mode="a+") as file:
-            texto = '\n' + str(mensaje).ljust(60,'.') + str(diaYHora)
-            file.write(texto)
-            file.close()
-
     # consigue las fichas de la hora
     def getDatos(self):
         credenciales = self._datosConexion.getCredenciales() # consigue las credenciales
-        # datos = self._datosConexion.getDatos(credenciales) # consigue los registros
+        datos = self._datosConexion.getDatos(credenciales) # consigue los registros
 
-        datos = None
+        # datos = None
 
         if not datos: 
-            self.escribirlog('Error -- no se pudo cargar los datos')
+            Log('No se pudo cargar los datos', tipo="Error")
             return
     
         self._datos = datos
@@ -53,15 +45,18 @@ class Robot:
                 if instructorAnterior != "":
                     # time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
                     (emailIns, seremailIns) = email.split(sep = "@")
+                    strFichas = ""
+                    for nf in fichas: strFichas += nf[0] + ", "
                     user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas, argregarArchivo = argregarArchivo)
                     archivoJson = 'sercorreoterminacion.json' if argregarArchivo else 'sercorreoalistamiento.json'
                     if not produccion: # para prueba 
                         correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user )
+                        Log("Se envio correo de " + ("Terminacion" if argregarArchivo else "Alistamiento") + " a " + instructor + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
                     else:
                         pass
                     #    correo = Correo(archivoJson, emailIns, seremailIns, instructor, user )
 
-                    correo.build_email(user=user)
+                    # correo.build_email(user=user)
 
                 instructorAnterior = instructor
                 fichas = []
@@ -76,12 +71,13 @@ class Robot:
             diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
             if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
+                Log("NUEVA EJECUCION ROBOT", "+++++")
 
                 ####-----------------------------------------------------
                 produccion = False  # para pruebas --> produccion = False
                 ####-----------------------------------------------------
 
-                if not produccion: fechaActual = date(2023, 6, 21) # para pruebas
+                if not produccion: fechaActual = date(2023, 6, 22) # para pruebas
 
                 fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
                 # append(["" for i in range(12)]) para procesar el ultimo instructor
@@ -90,9 +86,19 @@ class Robot:
                 filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
                 filasTerminacion.append(["" for i in range(12)]) 
 
-                # if filasAlistamiento: self.sendCorreos(filasAlistamiento, produccion, False)
-                if filasTerminacion: self.sendCorreos(filasTerminacion, produccion, True)
-   
+                if (cantidad := len(filasAlistamiento)) > 1:
+                    Log("Hay " + str(cantidad - 1) + " fichas de Alistamiento")
+                    self.sendCorreos(filasAlistamiento, produccion, False)
+                else:
+                    Log("No hay fichas para Alistamiento")
+
+                if (cantidad := len(filasTerminacion)) > 1: 
+                    Log("Hay " + str(cantidad - 1) + " fichas de Terminacion")
+                    self.sendCorreos(filasTerminacion, produccion, True)
+                else:
+                    Log("No hay fichas para Terminacion")
+
+
 if __name__ == '__main__':
     robot = Robot()
     robot.getDatos()
