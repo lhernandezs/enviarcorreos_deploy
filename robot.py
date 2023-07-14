@@ -46,21 +46,17 @@ class Robot:
                     if self._produccion: time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
                     
                     (emailIns, seremailIns) = email.split(sep = "@")
-                    
                     strFichas = ""
                     for nf in fichas: strFichas += nf[0] + ", "
-                    
                     user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas, agregarArchivo = agregarArchivo)
                     archivoJson = 'sercorreoterminacion.json' if agregarArchivo else 'sercorreoalistamiento.json'
 
                     if not self._produccion:
                         correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user )  # para prueba 
                     else:
-                        pass
-                        #correo = Correo(archivoJson, emailIns, seremailIns, instructor, user ) # para produccion
+                        correo = Correo(archivoJson, emailIns, seremailIns, instructor, user ) # para produccion
 
                     Log("Se envio correo de " + ("Terminacion" if agregarArchivo else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
-
                     correo.build_email(user=user)
 
                 instructorAnterior = instructor
@@ -78,7 +74,7 @@ class Robot:
             if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
                 Log("NUEVA EJECUCION DEL ROBOT", "+++++")
 
-                if not self._produccion: fechaActual = date(2023, 7, 18) # para pruebas
+                if not self._produccion: fechaActual = date(2023, 6, 22) # para pruebas
                 fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
 
                 # append(["" for i in range(12)]) para procesar el ultimo instructor
