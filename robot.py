@@ -1,8 +1,9 @@
 import time
 import random
+import os
  
 from datos          import Datos
-from datetime       import date
+from datetime       import date, datetime
 from anno           import Anno
 from correo         import Correo
 from modelo         import Modelo
@@ -10,16 +11,26 @@ from modelo         import Modelo
 class Robot:
 
     def __init__(self):
-        self._datosConexion = Datos("json\conexion.json") # crea una instancia de datos según el archivo JSON de la conexion
+        self._datosConexion = Datos("json\conexion.json") # crea una instancia de datos según el archivo de configuracion JSON de la conexion
         self._datos = None
+
+    def escribirlog(self, mensaje):
+        diaYHora = datetime.now()
+        file = os.path.join("log", "errores.log")
+        with open(file, mode="a+") as file:
+            texto = '\n' + str(mensaje).ljust(60,'.') + str(diaYHora)
+            file.write(texto)
+            file.close()
 
     # consigue las fichas de la hora
     def getDatos(self):
         credenciales = self._datosConexion.getCredenciales() # consigue las credenciales
-        datos = self._datosConexion.getDatos(credenciales) # consigue los registros
+        # datos = self._datosConexion.getDatos(credenciales) # consigue los registros
 
-        if not datos:
-            print('No se pudo obtener los datos.')
+        datos = None
+
+        if not datos: 
+            self.escribirlog('Error -- no se pudo cargar los datos')
             return
     
         self._datos = datos
@@ -40,7 +51,7 @@ class Robot:
             instructor  = fila[4]
             if not instructor == instructorAnterior:
                 if instructorAnterior != "":
-                    time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
+                    # time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
                     (emailIns, seremailIns) = email.split(sep = "@")
                     user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas, argregarArchivo = argregarArchivo)
                     archivoJson = 'sercorreoterminacion.json' if argregarArchivo else 'sercorreoalistamiento.json'
@@ -60,26 +71,27 @@ class Robot:
             
     # revisa si el dia de envio de correos es laborable, filtra las fichas y llama a sendCorreos()
     def processDatos(self):
-        fechaActual = date.today()
-        diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
+        if self._datos:
+            fechaActual = date.today()
+            diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
-        if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
+            if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
 
-            ####-----------------------------------------------------
-            produccion = False  # para pruebas --> produccion = False
-            ####-----------------------------------------------------
+                ####-----------------------------------------------------
+                produccion = False  # para pruebas --> produccion = False
+                ####-----------------------------------------------------
 
-            if not produccion: fechaActual = date(2023, 6, 21) # para pruebas
+                if not produccion: fechaActual = date(2023, 6, 21) # para pruebas
 
-            fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
-            # append(["" for i in range(12)]) para procesar el ultimo instructor
-            filasAlistamiento = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, True), self._datos)))
-            filasAlistamiento.append(["" for i in range(12)]) 
-            filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
-            filasTerminacion.append(["" for i in range(12)]) 
+                fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
+                # append(["" for i in range(12)]) para procesar el ultimo instructor
+                filasAlistamiento = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, True), self._datos)))
+                filasAlistamiento.append(["" for i in range(12)]) 
+                filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
+                filasTerminacion.append(["" for i in range(12)]) 
 
-            if filasAlistamiento: self.sendCorreos(filasAlistamiento, produccion, False)
-            if filasTerminacion: self.sendCorreos(filasTerminacion, produccion, True)
+                # if filasAlistamiento: self.sendCorreos(filasAlistamiento, produccion, False)
+                if filasTerminacion: self.sendCorreos(filasTerminacion, produccion, True)
    
 if __name__ == '__main__':
     robot = Robot()

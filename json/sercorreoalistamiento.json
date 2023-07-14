@@ -2,6 +2,12 @@
     "emailRemitente" : "lhernandezs331",
     "servidorRemitente" : "gmail.com",
     "nombreRemitente" : "lhernandezs@sena.edu.co",
+    "emailCc" : "lhernandezs",
+    "servidorCc" : "sena.edu.co",
+    "nombreCc" : "Leonardo Hernandez Silva",
+    "emailBcc" : "lhernandezs331",
+    "servidorBcc" : "gmail.com",
+    "nombreBcc" : "LHS",    
     "asunto" : "Alistamiento programas formacion complementaria virtual",
     "template" : "correoAlistamiento.html",
     "adjunto" : "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
