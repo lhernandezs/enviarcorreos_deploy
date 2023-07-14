@@ -6,13 +6,14 @@ from google.oauth2.credentials          import Credentials
 from google_auth_oauthlib.flow          import InstalledAppFlow
 from googleapiclient.discovery          import build
 from googleapiclient.errors             import HttpError
+from log                                import Log
 
 class Datos:
 
     # constructor de la clase
     def __init__(self, archivoJson):
 
-        # leo el archivo JSON con los datos de conexion
+        # leo el archivo JSON para obtener los datos de conexion a la hoja de calculo
         with open(archivoJson, 'r') as conex:
             arc = json.load(conex)
 
@@ -25,7 +26,6 @@ class Datos:
 
     # consigo el token y/o credenciales de conexion
     def getCredenciales(self):
-
         # El archivo token.json almacena los tokens de acceso y actualización del usuario, y se crea automáticamente cuando el flujo de autorización se completa por primera vez.
         token = os.path.join(self._path, self._token)
         credenciales = os.path.join(self._path, self._credenciales)
@@ -50,7 +50,6 @@ class Datos:
 
     # obtengo los datos de las fichas o None si no es posible la conexión
     def getDatos(self, creds):
-        
         try:
             service = build('sheets', 'v4', credentials=creds)
 
@@ -60,5 +59,5 @@ class Datos:
             return result.get('values', [])
 
         except HttpError as err:
-            print(err)
+            Log(err)
             return None

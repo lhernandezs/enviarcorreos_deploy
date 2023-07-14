@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 class Modelo(BaseModel):
@@ -7,6 +6,4 @@ class Modelo(BaseModel):
     instructor: str
     email: EmailStr
     fichas: list
-    argregarArchivo : Optional[bool] = False
-
-
+    agregarArchivo : Optional[bool] = False

@@ -15,7 +15,5 @@
 # print(dir)
 # print(ser)
 
-lista = ["" for i in range(12)]
-print(lista)
-
-"adjunto" : "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
+adjunto = "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
+print(adjunto.split(sep="/")[1])

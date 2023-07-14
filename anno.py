@@ -58,5 +58,8 @@ class Anno:
     
 if __name__ == "__main__":
     y = Anno(2023)
-    for dia in y.listaDiasLaborables():
-        print(dia)
+    for diaLaborable in y.listaDiasLaborables():
+        print(diaLaborable) #imprime la lista de dias laborales del año
+    print("--------------------------")
+    for festivo in y.listaFestivos():
+        print(festivo) #imprime la lista de dias festivos del año
