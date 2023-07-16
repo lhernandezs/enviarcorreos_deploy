@@ -12,7 +12,7 @@ class Robot:
 
     def __init__(self, produccion = False):
         self._produccion = produccion
-        self._datosConexion = Datos("json\conexion.json") # crea una instancia de datos según el archivo de configuracion JSON de la conexion
+        self._datosConexion = Datos(os.path.join("json", "conexion.json")) # crea una instancia de datos según el archivo de configuracion JSON de la conexion
         self._datos = None
 
     # consigue las fichas de la hora
@@ -71,8 +71,8 @@ class Robot:
             fechaActual = date.today()
             diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
-            if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables
-                Log("NUEVA EJECUCION DEL ROBOT", "+++++")
+            Log("NUEVA EJECUCION DEL ROBOT", "+++++")
+            if fechaActual in diasLaborables or not self._produccion: # el robot solo envia correos en dias laborables en producion
 
                 if not self._produccion: fechaActual = date(2023, 6, 22) # para pruebas
                 fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
@@ -94,6 +94,8 @@ class Robot:
                     self.sendCorreos(filasTerminacion, True)
                 else:
                     Log("No hay fichas para Terminacion")
+            else:
+                Log("Solo se ejecuta en dias laborables (en produccion)")
 
 
 if __name__ == '__main__':
