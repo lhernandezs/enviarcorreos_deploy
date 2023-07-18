@@ -15,5 +15,5 @@
 # print(dir)
 # print(ser)
 
-adjunto = "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
-print(adjunto.split(sep="/")[1])
+# adjunto = "attachments/cierre de Curso CSF - Act 2023 03 20.xlsx"
+# print(adjunto.split(sep="/")[1])

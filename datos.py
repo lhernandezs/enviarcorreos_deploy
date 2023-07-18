@@ -61,3 +61,10 @@ class Datos:
         except HttpError as err:
             Log(err)
             return None
+
+if __name__ == "__main__":
+    datos = Datos(os.path.join("json", "conexion.json"))
+    c = datos.getCredenciales()
+    d = datos.getDatos(c)
+    for fila in d:
+        print(fila)

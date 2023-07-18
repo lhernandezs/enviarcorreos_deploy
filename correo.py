@@ -14,7 +14,7 @@ class Correo:
     ENV = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
 
     # constructor de la clase
-    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo):
+    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo, produccion = False):
         with open(os.path.join('json', archivoJson), 'r') as conex:
             arc = json.load(conex)
         self._emaEnv = arc["emailRemitente"] 
@@ -30,10 +30,11 @@ class Correo:
         self._templa = arc["template"]
         self._adjunt = arc["adjunto"]
 
-        self._emaRec = emaRec
-        self._serRec = serRec
-        self._namRec = namRec
-        self._modelo = modelo
+        self._emaRec        = emaRec
+        self._serRec        = serRec
+        self._namRec        = namRec
+        self._modelo        = modelo
+        self._produccion    = produccion
 
     # renderiza la plantilla -template- con los datos -modelo-
     def render_html(self, modelo: Modelo):
@@ -51,7 +52,10 @@ class Correo:
     # metodo que envia el email
     def send_email(self, email_message: EmailMessage):
         remitente = self._emaEnv + "@" + self._serEnv
-        destinatarios = [self._emaRec + "@" + self._serRec, self._emaCc + "@" + self._serCc, self._emaBcc + "@" + self._serBcc ]
+        if self._produccion:
+            destinatarios = [ self._emaRec + "@" + self._serRec, self._emaCc + "@" + self._serCc, self._emaBcc + "@" + self._serBcc ]
+        else:
+            destinatarios = [ self._emaRec + "@" + self._serRec ]
 
         smtp = smtplib.SMTP_SSL("smtp.gmail.com")
         smtp.login(remitente, "ghpflywujadbastq") # para que gmail pueda enviar correos desde un aplicativo externo se requiere una clave de 16 caracteres
@@ -65,8 +69,9 @@ class Correo:
         email_message["Subject"]    = self._asunto
         email_message["From"]       = Address(username=self._emaEnv, domain=self._serEnv, display_name=self._namEnv)
         email_message["To"]         = Address(username=self._emaRec, domain=self._serRec, display_name=self._namRec)
-        email_message["Cc"]         = Address(username=self._emaCc, domain=self._serCc, display_name=self._namCc)
-        email_message["Bcc"]        = Address(username=self._emaBcc, domain=self._serBcc, display_name=self._namBcc)
+        if self._produccion: # la copia y la copia oculta se envia si esta en produccion
+            email_message["Cc"]         = Address(username=self._emaCc, domain=self._serCc, display_name=self._namCc)
+            email_message["Bcc"]        = Address(username=self._emaBcc, domain=self._serBcc, display_name=self._namBcc)
         email_message.add_alternative(html_data, subtype="html")
         
         if user.agregarArchivo:

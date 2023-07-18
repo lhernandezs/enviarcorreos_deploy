@@ -35,34 +35,34 @@ class Robot:
         return False
 
     # envia los correos segun las filas 
-    def sendCorreos(self, filas, agregarArchivo):
+    def sendCorreos(self, filas, agregarArc):
         instructorAnterior = ""
         fichas = []
         for fila in filas:
-            instructor  = fila[4]
-            if not instructor == instructorAnterior:
+            ins  = fila[4]
+            if not ins == instructorAnterior:
                 if instructorAnterior != "":
 
                     if self._produccion: time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
                     
-                    (emailIns, seremailIns) = email.split(sep = "@")
+                    (emailIns, seremailIns) = emailD.split(sep = "@")
                     strFichas = ""
                     for nf in fichas: strFichas += nf[0] + ", "
-                    user = Modelo(instructor = instructorAnterior, email = email, fichas = fichas, agregarArchivo = agregarArchivo)
-                    archivoJson = 'sercorreoterminacion.json' if agregarArchivo else 'sercorreoalistamiento.json'
+                    user = Modelo(instructor = instructorAnterior, email = emailD, fichas = fichas, agregarArchivo = agregarArc)
+                    archivoJson = 'sercorreoterminacion.json' if agregarArc else 'sercorreoalistamiento.json'
 
                     if not self._produccion:
-                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user )  # para prueba 
+                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user, produccion = False )  # para prueba 
                     else:
-                        correo = Correo(archivoJson, emailIns, seremailIns, instructor, user ) # para produccion
+                        correo = Correo(archivoJson, emailIns, seremailIns, instructorAnterior, user, produccion = True ) # para produccion
 
-                    Log("Se envio correo de " + ("Terminacion" if agregarArchivo else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
+                    Log("Se envio correo de " + ("Terminacion" if agregarArc else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
                     correo.build_email(user=user)
 
-                instructorAnterior = instructor
+                instructorAnterior = ins
                 fichas = []
 
-            (ficha, curso, familia, email, fecIni, fecFin) = (fila[0], fila[1], fila[2], fila[8], fila[10], fila[11],)
+            (ficha, curso, familia, emailD, fecIni, fecFin) = (fila[0], fila[1], fila[2], fila[8], fila[10], fila[11],)
             fichas.append([ficha, curso, familia, fecIni, fecFin])
             
     # revisa si el dia de envio de correos es laborable, filtra las fichas y llama a sendCorreos()
@@ -74,7 +74,7 @@ class Robot:
             Log("NUEVA EJECUCION DEL ROBOT", "+++++")
             if fechaActual in diasLaborables or not self._produccion: # el robot solo envia correos en dias laborables en producion
 
-                if not self._produccion: fechaActual = date(2023, 6, 22) # para pruebas
+                if not self._produccion: fechaActual = date(2023, 7, 18) # para pruebas
                 fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
 
                 # append(["" for i in range(12)]) para procesar el ultimo instructor
@@ -99,8 +99,8 @@ class Robot:
 
 
 if __name__ == '__main__':
-    robot = Robot()
+    # robot = Robot()
     # para produccion se debe cambiar los correos y nombre del Coordinador en los archivos servcorreoalistamiento y servcorreoterminacion
-    # robot = Robot(produccion = True)
+    robot = Robot(produccion = True)
     robot.getDatos()
     robot.processDatos()
