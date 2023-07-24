@@ -16,6 +16,7 @@ class Datos:
         # leo el archivo JSON para obtener los datos de conexion a la hoja de calculo
         with open(archivoJson, 'r') as conex:
             arc = json.load(conex)
+            conex.close()
 
         self._scopes        = arc["scopes"] 
         self._hoja          = arc["hoja"] 

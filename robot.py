@@ -8,6 +8,7 @@ from anno           import Anno
 from correo         import Correo
 from modelo         import Modelo
 from log            import Log
+
 class Robot:
 
     def __init__(self, produccion = False):
@@ -43,7 +44,10 @@ class Robot:
             if not ins == instructorAnterior:
                 if instructorAnterior != "":
 
-                    if self._produccion: time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos segundo
+                    if self._produccion: 
+                        time.sleep(random.randint(60, 240)) # detiene la ejeucón del envio de correo por unos minutos
+                    else:
+                        time.sleep(random.randint(0, 3)) # detiene la ejeucón del envio de correo por unos segundos
                     
                     (emailIns, seremailIns) = emailD.split(sep = "@")
                     strFichas = ""
@@ -51,10 +55,10 @@ class Robot:
                     user = Modelo(instructor = instructorAnterior, email = emailD, fichas = fichas, agregarArchivo = agregarArc)
                     archivoJson = 'sercorreoterminacion.json' if agregarArc else 'sercorreoalistamiento.json'
 
-                    if not self._produccion:
-                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user, produccion = False )  # para prueba 
-                    else:
+                    if self._produccion:
                         correo = Correo(archivoJson, emailIns, seremailIns, instructorAnterior, user, produccion = True ) # para produccion
+                    else:
+                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user, produccion = False )  # para prueba 
 
                     Log("Se envio correo de " + ("Terminacion" if agregarArc else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
                     correo.build_email(user=user)
@@ -68,20 +72,21 @@ class Robot:
     # revisa si el dia de envio de correos es laborable, filtra las fichas y llama a sendCorreos()
     def processDatos(self):
         if self._datos:
-            fechaActual = date.today()
+            if self._produccion:
+                fechaActual = date.today()
+            else:
+                fechaActual = date.today() # para pruebas
             diasLaborables = Anno(fechaActual.year).listaDiasLaborables()
 
             Log("NUEVA EJECUCION DEL ROBOT", "+++++")
-            if fechaActual in diasLaborables or not self._produccion: # el robot solo envia correos en dias laborables en producion
+            if fechaActual in diasLaborables: # el robot solo envia correos en dias laborables en producion
 
-                if not self._produccion: fechaActual = date(2023, 7, 18) # para pruebas
                 fechaLabSig = diasLaborables[diasLaborables.index(fechaActual) + 1]
 
-                # append(["" for i in range(12)]) para procesar el ultimo instructor
                 filasAlistamiento = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, True), self._datos)))
-                filasAlistamiento.append(["" for i in range(12)]) 
+                filasAlistamiento.append(["" for i in range(12)]) # append(["" for i in range(12)]) para procesar el ultimo instructor
                 filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
-                filasTerminacion.append(["" for i in range(12)]) 
+                filasTerminacion.append(["" for i in range(12)]) # append(["" for i in range(12)]) para procesar el ultimo instructor
 
                 if (cantidad := len(filasAlistamiento)) > 1:
                     Log("Hay " + str(cantidad - 1) + " fichas de Alistamiento")
@@ -99,8 +104,12 @@ class Robot:
 
 
 if __name__ == '__main__':
-    # robot = Robot()
     # para produccion se debe cambiar los correos y nombre del Coordinador en los archivos servcorreoalistamiento y servcorreoterminacion
-    robot = Robot(produccion = True)
+    produc = False
+    if produc:
+        robot = Robot(produccion = True)
+    else:
+        robot = Robot(produccion = False)
+
     robot.getDatos()
     robot.processDatos()
