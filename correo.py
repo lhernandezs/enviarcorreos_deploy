@@ -14,9 +14,11 @@ class Correo:
     ENV = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
 
     # constructor de la clase
-    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo, produccion = False):
+    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo, produccion):
         with open(os.path.join('json', archivoJson), 'r') as conex:
             arc = json.load(conex)
+            conex.close()
+
         self._emaEnv = arc["emailRemitente"] 
         self._serEnv = arc["servidorRemitente"] 
         self._namEnv = arc["nombreRemitente"] 
@@ -69,9 +71,11 @@ class Correo:
         email_message["Subject"]    = self._asunto
         email_message["From"]       = Address(username=self._emaEnv, domain=self._serEnv, display_name=self._namEnv)
         email_message["To"]         = Address(username=self._emaRec, domain=self._serRec, display_name=self._namRec)
+
         if self._produccion: # la copia y la copia oculta se envia si esta en produccion
             email_message["Cc"]         = Address(username=self._emaCc, domain=self._serCc, display_name=self._namCc)
             email_message["Bcc"]        = Address(username=self._emaBcc, domain=self._serBcc, display_name=self._namBcc)
+        
         email_message.add_alternative(html_data, subtype="html")
         
         if user.agregarArchivo:
