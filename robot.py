@@ -58,7 +58,7 @@ class Robot:
                     if self._produccion:
                         correo = Correo(archivoJson, emailIns, seremailIns, instructorAnterior, user, produccion = True ) # para produccion
                     else:
-                        correo = Correo(archivoJson,'leo66', 'hotmail.com', 'LeoHotmail', user, produccion = False )  # para prueba 
+                        correo = Correo(archivoJson,'lhernandezs', 'sena.edu.co', 'LeonardoSENA', user, produccion = False )  # para prueba 
 
                     Log("Se envio correo de " + ("Terminacion" if agregarArc else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
                     correo.build_email(user=user)
