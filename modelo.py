@@ -7,3 +7,6 @@ class Modelo(BaseModel):
     email: EmailStr
     fichas: list
     agregarArchivo : Optional[bool] = False
+
+class Salida(BaseModel):
+    reporte: list

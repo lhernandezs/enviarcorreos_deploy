@@ -14,7 +14,7 @@ class Correo:
     ENV = Environment(loader=FileSystemLoader("templates"), autoescape=select_autoescape())
 
     # constructor de la clase
-    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo, produccion):
+    def __init__(self, archivoJson, emaRec, serRec, namRec, modelo, produccion, passw):
         with open(os.path.join('json', archivoJson), 'r') as conex:
             arc = json.load(conex)
             conex.close()
@@ -37,6 +37,7 @@ class Correo:
         self._namRec        = namRec
         self._modelo        = modelo
         self._produccion    = produccion
+        self._passw         = passw
 
     # renderiza la plantilla -template- con los datos -modelo-
     def render_html(self, modelo: Modelo):
@@ -60,7 +61,8 @@ class Correo:
             destinatarios = [ self._emaRec + "@" + self._serRec ]
 
         smtp = smtplib.SMTP_SSL("smtp.gmail.com")
-        smtp.login(remitente, "ghpflywujadbastq") # para que gmail pueda enviar correos desde un aplicativo externo se requiere una clave de 16 caracteres
+        smtp.login(remitente, self._passw) # para que gmail pueda enviar correos desde un aplicativo externo se requiere una clave de 16 caracteres
+ #       smtp.login(remitente, "") # para que gmail pueda enviar correos desde un aplicativo externo se requiere una clave de 16 caracteres
         smtp.sendmail(remitente, destinatarios, email_message.as_string())
         smtp.quit()
 

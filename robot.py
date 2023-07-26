@@ -11,8 +11,9 @@ from log            import Log
 
 class Robot:
 
-    def __init__(self, produccion = False):
+    def __init__(self, produccion = False, passw = "1234"):
         self._produccion = produccion
+        self._passw = passw
         self._datosConexion = Datos(os.path.join("json", "conexion.json")) # crea una instancia de datos según el archivo de configuracion JSON de la conexion
         self._datos = None
 
@@ -56,9 +57,9 @@ class Robot:
                     archivoJson = 'sercorreoterminacion.json' if agregarArc else 'sercorreoalistamiento.json'
 
                     if self._produccion:
-                        correo = Correo(archivoJson, emailIns, seremailIns, instructorAnterior, user, produccion = True ) # para produccion
+                        correo = Correo(archivoJson, emailIns, seremailIns, instructorAnterior, user, produccion = True, passw = self._passw) # para produccion
                     else:
-                        correo = Correo(archivoJson,'lhernandezs', 'sena.edu.co', 'LeonardoSENA', user, produccion = False )  # para prueba 
+                        correo = Correo(archivoJson,'lhernandezs', 'sena.edu.co', 'LeonardoSENA', user, produccion = False, passw = self._passw)  # para prueba 
 
                     Log("Se envio correo de " + ("Terminacion" if agregarArc else "Alistamiento") + " a " + instructorAnterior + " con " + str(len(fichas)) + " fichas: [ " + strFichas +"]")
                     correo.build_email(user=user)
