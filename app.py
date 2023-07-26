@@ -31,7 +31,7 @@ def execRobot(pw: str):
     robot.processDatos()
 
     file = os.path.join("log", "salida.log")
-    with open(file, mode="r") as file:
+    with open(file, mode="r", encoding="ISO-8859-1") as file:
         texto = file.readlines()
         file.close()
     salida = Salida(reporte=texto)
