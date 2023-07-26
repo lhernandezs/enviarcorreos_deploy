@@ -89,13 +89,15 @@ class Robot:
                 filasTerminacion  = (list(filter(lambda fila: self.filtroFichas(fila, fechaActual, fechaLabSig, False), self._datos)))
                 filasTerminacion.append(["" for i in range(12)]) # append(["" for i in range(12)]) para procesar el ultimo instructor
 
-                if (cantidad := len(filasAlistamiento)) > 1:
+                cantidad = len(filasAlistamiento)
+                if cantidad > 1:
                     Log("Hay " + str(cantidad - 1) + " fichas de Alistamiento")
                     self.sendCorreos(filasAlistamiento, False)
                 else:
                     Log("No hay fichas para Alistamiento")
 
-                if (cantidad := len(filasTerminacion)) > 1: 
+                cantidad = len(filasTerminacion)
+                if cantidad > 1: 
                     Log("Hay " + str(cantidad - 1) + " fichas de Terminacion")
                     self.sendCorreos(filasTerminacion, True)
                 else:
